@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.metrodeparis.model.Fermata;
 import it.polito.tdp.metrodeparis.model.MetroDeParisModel;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,7 +39,17 @@ public class MetroDeParisController {
     	this.model = model;
     	boxStart.getItems().addAll(model.getFermate());
     	boxDest.getItems().addAll(model.getFermate());
-    	model.generateGraph();
+    	Task<Void> task = new Task<Void>(){
+			@Override
+			protected Void call() throws Exception {
+				model.generateGraph();
+				return null;
+			}
+    	};
+    	
+    	Thread th = new Thread(task);
+    	th.setDaemon(true);
+    	th.start();
     }
 
     @FXML
