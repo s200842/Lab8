@@ -2,6 +2,8 @@ package it.polito.tdp.metrodeparis;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.metrodeparis.model.MetroDeParisModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,9 +29,15 @@ public class MetroDeParisController {
 
     @FXML
     private TextArea txtResult;
+    
+    private MetroDeParisModel model;
+    
+    public void setModel(MetroDeParisModel model){
+    	this.model = model;
+    }
 
     @FXML
-    void doDistance(ActionEvent event) {
+    public void doDistance(ActionEvent event) {
 
     }
 
