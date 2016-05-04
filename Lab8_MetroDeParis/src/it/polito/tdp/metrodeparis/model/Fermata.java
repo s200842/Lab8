@@ -22,7 +22,7 @@ public class Fermata {
 		this.idFermata = idFermata;
 	}
 
-	public String getNome() {
+	public String toString() {
 		return nome;
 	}
 

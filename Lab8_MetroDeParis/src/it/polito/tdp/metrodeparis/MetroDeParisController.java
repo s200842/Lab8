@@ -3,6 +3,7 @@ package it.polito.tdp.metrodeparis;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.metrodeparis.model.Fermata;
 import it.polito.tdp.metrodeparis.model.MetroDeParisModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,10 +20,10 @@ public class MetroDeParisController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxStart;
+    private ComboBox<Fermata> boxStart;
 
     @FXML
-    private ComboBox<?> boxDest;
+    private ComboBox<Fermata> boxDest;
 
     @FXML
     private Button btnDistance;
@@ -34,6 +35,8 @@ public class MetroDeParisController {
     
     public void setModel(MetroDeParisModel model){
     	this.model = model;
+    	boxStart.getItems().addAll(model.getFermate());
+    	boxDest.getItems().addAll(model.getFermate());
     }
 
     @FXML
