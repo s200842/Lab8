@@ -12,12 +12,13 @@ import it.polito.tdp.metrodeparis.model.Linea;
 
 public class LineaDAO {
 	
-	public List<Linea> getLinee(){
-		List<Linea> listaLinee = new ArrayList<Linea>();
+	public List<Linea> getLinee(Fermata f){
+		List<Linea> list = new ArrayList<Linea>();
 		Connection c = DBConnect.getConnection();
-		String sql = "SELECT * FROM linea";
+		String sql = "SELECT * FROM linea WHERE id_linea IN (SELECT id_linea FROM connessione WHERE id_stazP = ?)";
 		try {
 			PreparedStatement st = c.prepareStatement(sql);
+			st.setInt(1, f.getIdFermata());
 			ResultSet res = st.executeQuery();
 			while(res.next()){
 				int id = res.getInt("id_linea");
@@ -26,11 +27,12 @@ public class LineaDAO {
 				double intervallo = res.getDouble("intervallo");
 				String colore = res.getString("colore");
 				Linea l = new Linea(id, nome, velocita, intervallo, colore);
-				listaLinee.add(l);
+				list.add(l);
 			}
 			res.close();
 			c.close();
-			return listaLinee;
+			return list;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

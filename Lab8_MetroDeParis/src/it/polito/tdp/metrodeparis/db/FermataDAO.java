@@ -33,21 +33,21 @@ public class FermataDAO {
 		return null;
 	}
 	
-	public List<Fermata> getVicine(Fermata f1){
-		List<Fermata> listaFermateVicine = new ArrayList<Fermata>();
+	public List<String> getVicine(Fermata f1){
+		List<String> listaFermateVicine = new ArrayList<String>();
 		Connection c = DBConnect.getConnection();
-		String sql = "SELECT * FROM fermata WHERE id_fermata IN (SELECT id_stazA FROM connessione WHERE id_stazP = ?)";
+		String sql = "SELECT nome FROM fermata WHERE id_fermata IN (SELECT id_stazA FROM connessione WHERE id_stazP = ?)";
 		try {
 			PreparedStatement st = c.prepareStatement(sql);
 			st.setInt(1, f1.getIdFermata());
 			ResultSet res = st.executeQuery();
 			while(res.next()){
-				int id = res.getInt("id_fermata");
+				//int id = res.getInt("id_fermata");
 				String nome = res.getString("nome");
-				double coordX = res.getDouble("coordX");
+				/*double coordX = res.getDouble("coordX");
 				double coordY = res.getDouble("coordY");
-				Fermata f = new Fermata(id, nome, coordX, coordY);
-				listaFermateVicine.add(f);
+				Fermata f = new Fermata(id, nome, coordX, coordY);*/
+				listaFermateVicine.add(nome);
 			}
 			res.close();
 			c.close();

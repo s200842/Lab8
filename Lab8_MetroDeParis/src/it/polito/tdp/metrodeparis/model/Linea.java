@@ -77,8 +77,5 @@ public class Linea {
 			return false;
 		return true;
 	}
-	
-	
-	
 
 }
