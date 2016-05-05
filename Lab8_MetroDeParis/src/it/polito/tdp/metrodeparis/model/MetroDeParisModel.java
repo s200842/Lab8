@@ -80,6 +80,9 @@ public class MetroDeParisModel {
 		double d = LatLngTool.distance(new LatLng(f1.getCoordX(), f1.getCoordY()), new LatLng(f2.getCoordX(), f2.getCoordY()), LengthUnit.KILOMETER);
 		//La velocità è specificata nella tabella linea
 		double v = ldao.getVelocity(f1, f2);
+		if(d == 0 || v == 0){
+			return 0;
+		}
 		return d/v;
 	}
 
@@ -101,15 +104,15 @@ public class MetroDeParisModel {
 	
 	public String tempoPercorso(List<Fermata> l){
 		//Calcolo tempo percorso in s
-		int time = 0;
+		double time = 0.0;
 		for(int i=0; i<l.size()-1; i++){
 			time += calcolaTempo(l.get(i), l.get(i+1));
 		}
 		time = time*3600;
 		//Calcolo del tempo delle soste
-		int s = 0;
+		double s = 0.0;
 		String resSoste = "";
-		for(Fermata f : l){
+		for(int i=0; i<l.size(); i++){
 			s += 30;
 		}
 		s = s+time;
@@ -117,14 +120,14 @@ public class MetroDeParisModel {
 			resSoste = s+" secondi.";
 		}
 		else if(s < 3600){
-			int min = s/60;
-			int sec = s%60;
+			int min = (int)s/60;
+			int sec = (int)s%60;
 			resSoste = min+" minuti e "+sec+" secondi.";
 		}
 		else{
-			int h = s/3600;
-			int min = (s%3600)/60;
-			int sec = (s%3600)%60;
+			int h = (int)s/3600;
+			int min = (int)((s%3600)/60);
+			int sec = (int)((s%3600)%60);
 			resSoste = h+" ore, "+min+" minuti e "+sec+" secondi.";
 		}
 						
