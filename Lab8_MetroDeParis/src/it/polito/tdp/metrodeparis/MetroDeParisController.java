@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.metrodeparis.model.Fermata;
 import it.polito.tdp.metrodeparis.model.MetroDeParisModel;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,28 +34,60 @@ public class MetroDeParisController {
     
     private MetroDeParisModel model;
     
-    public void setModel(MetroDeParisModel model){
-    	this.model = model;
-    	boxStart.getItems().addAll(model.getFermate());
-    	boxDest.getItems().addAll(model.getFermate());
-    	Task<Void> task = new Task<Void>(){
-			@Override
-			protected Void call() throws Exception {
-				model.generateGraph();
-				return null;
-			}
-    	};
+    @FXML
+    private Button btnCycle;
+
+    @FXML
+    void doCycle(ActionEvent event) {
     	
-    	Thread th = new Thread(task);
-    	th.setDaemon(true);
-    	th.start();
     }
+    
+    public void setModel(MetroDeParisModel model){
+    	
+    	this.model = model;
+		
+		try {
+			model.creaGrafo();	
+			List<Fermata> stazioni = model.getStazioni();
+			boxStart.getItems().addAll(stazioni);
+			boxDest.getItems().addAll(stazioni);
+		} 
+		catch (RuntimeException e) {
+			txtResult.setText(e.getMessage());
+		}
+	}
 
     @FXML
     public void doDistance(ActionEvent event) {
-    	List<Fermata> result = model.calcolaPercorso(boxStart.getValue(), boxDest.getValue());
-    	txtResult.setText("Percorso: "+result+"\n\nTempo di percorrenza stimato: "+model.tempoPercorso(result));
-    	
+    	Fermata stazioneDiPartenza = boxStart.getValue();
+		Fermata stazioneDiArrivo = boxDest.getValue();
+
+		if (stazioneDiPartenza != null && stazioneDiArrivo != null) {
+			if (!stazioneDiPartenza.equals(stazioneDiArrivo)) {
+				try {
+					// Calcolo il percorso tra le due stazioni
+					model.calcolaPercorso(stazioneDiPartenza, stazioneDiArrivo);
+					// Ottengo il tempo di percorrenza
+					int tempoTotaleInSecondi = (int) model.getPercorsoTempoTotale();
+					int ore = tempoTotaleInSecondi / 3600;
+					int minuti = (tempoTotaleInSecondi % 3600) / 60;
+					int secondi = tempoTotaleInSecondi % 60;
+					String timeString = String.format("%02d:%02d:%02d", ore, minuti, secondi);
+					StringBuilder risultato = new StringBuilder();
+					// Ottengo il percorso
+					risultato.append(model.getPercorsoEdgeList());
+					risultato.append("\n\nTempo di percorrenza stimato: " + timeString + "\n");
+					// Aggiorno la TextArea
+					txtResult.setText(risultato.toString());
+				} catch (RuntimeException e) {
+					txtResult.setText(e.getMessage());
+				}
+			} else {
+				txtResult.setText("Inserire una stazione di arrivo diversa da quella di partenza.");
+			}			
+		} else {			
+			txtResult.setText("Inserire una stazione di arrivo ed una di partenza.");
+		}
     }
 
     @FXML
@@ -65,6 +96,7 @@ public class MetroDeParisController {
         assert boxDest != null : "fx:id=\"boxDest\" was not injected: check your FXML file 'MetroDeParis.fxml'.";
         assert btnDistance != null : "fx:id=\"btnDistance\" was not injected: check your FXML file 'MetroDeParis.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'MetroDeParis.fxml'.";
+        assert btnCycle != null : "fx:id=\"btnCycle\" was not injected: check your FXML file 'MetroDeParis.fxml'.";
 
     }
 }

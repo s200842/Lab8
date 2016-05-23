@@ -6,14 +6,16 @@ public class Linea {
 	private String nome;
 	private double velocita;
 	private double intervallo;
-	private String colore;
 	
-	public Linea(int idLinea, String nome, double velocita, double intervallo, String colore) {
+	public Linea(int idLinea, String nome, double velocita, double intervallo) {
 		this.idLinea = idLinea;
 		this.nome = nome;
 		this.velocita = velocita;
 		this.intervallo = intervallo;
-		this.colore = colore;
+	}
+	
+	public Linea(int idLinea) {
+		this.idLinea = idLinea;
 	}
 
 	public int getIdLinea() {
@@ -46,14 +48,6 @@ public class Linea {
 
 	public void setIntervallo(double intervallo) {
 		this.intervallo = intervallo;
-	}
-
-	public String getColore() {
-		return colore;
-	}
-
-	public void setColore(String colore) {
-		this.colore = colore;
 	}
 
 	@Override

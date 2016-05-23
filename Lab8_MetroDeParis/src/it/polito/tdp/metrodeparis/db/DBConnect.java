@@ -1,27 +1,31 @@
 package it.polito.tdp.metrodeparis.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.mchange.v2.c3p0.*;
 
 class DBConnect {
 	
-	private static String url = "jdbc:mysql://localhost/metroparis?user=root";
+	private static String jdbcURL = "jdbc:mysql://localhost/metroparis?user=root";
 
-	/**
-	 * Restituisce una nuova connessione, con i parametri a lui noti
-	 * @return la nuova java.sql.Connection, oppure null se si verificano
-	 * errori di connessione
-	 */
+	private static ComboPooledDataSource dataSource = null ;
+	
 	public static Connection getConnection() {
-		Connection conn;
+		
 		try {
-			conn = DriverManager.getConnection(url);
-			return conn ;
+			
+			if(dataSource==null) {
+				// creare ed attivare il Connection Pool
+				dataSource = new ComboPooledDataSource() ;
+				dataSource.setJdbcUrl(jdbcURL);
+			}
+			
+			return dataSource.getConnection();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Errore nella connessione", e) ;
 		}
-		return null ;
 	}
-
 }
